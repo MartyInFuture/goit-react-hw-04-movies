@@ -1,9 +1,10 @@
 import { getData } from '../api/getData';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
+import Search from '../Components/search/Search';
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 const MoviesView = () => {
-  const Search = lazy(() => import('../Components/search/Search'));
   const LinksList = lazy(() => import('../Components/linksList/LinksList'));
 
   const [movies, setMovies] = useState([]);
@@ -21,7 +22,6 @@ const MoviesView = () => {
   const getMovies = (search) => {
     getData('/search/movie', search).then((data) => {
       if (data.data.results.length === 0) {
-        alert('Nothing found');
         return false;
       }
       setMovies(data.data.results);
@@ -30,9 +30,7 @@ const MoviesView = () => {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Search getSearchData={getMovies} />
-      </Suspense>
+      <Search getSearchData={getMovies} />
       <Suspense fallback={<div>Loading...</div>}>
         <LinksList linksArr={movies} />
       </Suspense>
